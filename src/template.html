@@ -2,12 +2,98 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Project</title>
+
+    <title>Battleship</title>
   </head>
 
   <body>
-    <main id="content"></main>
-    <h1>My Project</h1>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Naval warfare</p>
+
+        <h1>Battleship</h1>
+      </div>
+
+      <button id="restart-button" class="secondary-button" type="button" hidden>
+        Play again
+      </button>
+    </header>
+
+    <main>
+      <section class="game-status">
+        <p id="status-message">Loading game...</p>
+
+        <div class="controls">
+          <button id="randomise-button" class="secondary-button" type="button">
+            Randomise fleet
+          </button>
+
+          <button id="start-button" class="primary-button" type="button">
+            Start battle
+          </button>
+        </div>
+      </section>
+
+      <section class="boards">
+        <article class="board-section">
+          <div class="board-heading">
+            <div>
+              <p class="eyebrow">Friendly waters</p>
+
+              <h2>Your fleet</h2>
+            </div>
+
+            <span class="ship-key"> Ship </span>
+          </div>
+
+          <div
+            id="player-board"
+            class="gameboard"
+            aria-label="Your gameboard"
+          ></div>
+        </article>
+
+        <article class="board-section">
+          <div class="board-heading">
+            <div>
+              <p class="eyebrow">Enemy waters</p>
+
+              <h2>Computer fleet</h2>
+            </div>
+
+            <span class="attack-key"> Select a target </span>
+          </div>
+
+          <div
+            id="computer-board"
+            class="gameboard enemy-board"
+            aria-label="Computer gameboard"
+          ></div>
+        </article>
+      </section>
+
+      <section class="legend">
+        <span>
+          <i class="legend-colour ship"></i>
+          Ship
+        </span>
+
+        <span>
+          <i class="legend-colour hit"></i>
+          Hit
+        </span>
+
+        <span>
+          <i class="legend-colour miss"></i>
+          Miss
+        </span>
+      </section>
+    </main>
+
+    <footer>
+      <p>Sink every enemy ship before the computer sinks yours.</p>
+    </footer>
   </body>
 </html>

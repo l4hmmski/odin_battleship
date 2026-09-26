@@ -1,3 +1,21 @@
+:root {
+  --navy: #0b172a;
+  --navy-light: #142945;
+  --ocean: #176b9c;
+  --ocean-light: #3aa8d8;
+  --water: #d9f1fa;
+
+  --white: #ffffff;
+  --background: #f2f6fa;
+  --text: #182230;
+  --muted: #687386;
+  --border: #ced8e3;
+
+  --ship: #45556c;
+  --hit: #e63946;
+  --miss: #8ecae6;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -6,8 +24,301 @@ body {
   min-height: 100vh;
   margin: 0;
 
+  color: var(--text);
+  background-color: var(--background);
+
   font-family:
     Arial,
     Helvetica,
     sans-serif;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-header {
+  padding:
+    24px
+    clamp(20px, 6vw, 80px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  color: var(--white);
+  background-color: var(--navy);
+}
+
+.site-header h1 {
+  margin: 2px 0 0;
+
+  font-size: 34px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+
+  color: var(--ocean-light);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+main {
+  width: min(1200px, calc(100% - 40px));
+  margin: auto;
+  padding: 35px 0;
+}
+
+.game-status {
+  margin-bottom: 30px;
+  padding: 18px 22px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 12px;
+  background-color: var(--white);
+
+  box-shadow:
+    0 8px 25px
+    rgba(11, 23, 42, 0.06);
+}
+
+.game-status p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 42px;
+  padding: 0 17px;
+
+  border-radius: 8px;
+
+  font-weight: 700;
+}
+
+.primary-button {
+  border: none;
+
+  color: var(--white);
+  background-color: var(--ocean);
+}
+
+.primary-button:hover {
+  background-color: #10587f;
+}
+
+.secondary-button {
+  border:
+    1px solid var(--border);
+
+  color: var(--text);
+  background-color: var(--white);
+}
+
+.secondary-button:hover {
+  background-color: #eaf1f6;
+}
+
+.boards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 35px;
+}
+
+.board-section {
+  padding: 25px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 15px;
+  background-color: var(--white);
+
+  box-shadow:
+    0 12px 35px
+    rgba(11, 23, 42, 0.07);
+}
+
+.board-heading {
+  margin-bottom: 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.board-heading h2 {
+  margin: 0;
+}
+
+.ship-key,
+.attack-key {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.gameboard {
+  width: 100%;
+  aspect-ratio: 1;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(10, 1fr);
+
+  border:
+    2px solid var(--ocean);
+}
+
+.board-cell {
+  min-width: 0;
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  border:
+    1px solid rgba(
+      23,
+      107,
+      156,
+      0.23
+    );
+
+  color: var(--white);
+  background-color: var(--water);
+
+  font-size:
+    clamp(13px, 2vw, 24px);
+  font-weight: 900;
+}
+
+.enemy-board:not(.disabled)
+  .board-cell:hover {
+  background-color: #b4dfef;
+}
+
+.board-cell.ship {
+  background-color: var(--ship);
+}
+
+.board-cell.hit {
+  background-color: var(--hit);
+}
+
+.board-cell.miss {
+  color: var(--ocean);
+  background-color: var(--miss);
+}
+
+.gameboard.disabled
+  .board-cell {
+  cursor: default;
+}
+
+.legend {
+  margin-top: 24px;
+
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-colour {
+  width: 13px;
+  height: 13px;
+
+  display: inline-block;
+
+  border-radius: 3px;
+}
+
+.legend-colour.ship {
+  background-color: var(--ship);
+}
+
+.legend-colour.hit {
+  background-color: var(--hit);
+}
+
+.legend-colour.miss {
+  background-color: var(--miss);
+}
+
+footer {
+  padding: 20px;
+
+  color: var(--muted);
+  text-align: center;
+}
+
+[hidden] {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  .boards {
+    grid-template-columns: 1fr;
+  }
+
+  .game-status {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .site-header {
+    padding: 20px;
+  }
+
+  main {
+    width: min(100% - 24px, 1200px);
+    padding-top: 20px;
+  }
+
+  .board-section {
+    padding: 14px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
 }
