@@ -1,5 +1,5 @@
 {
-  "name": "webpack_starter",
+  "name": "battleship",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,6 +21,7 @@
     "@eslint/js": "^10.0.1",
     "css-loader": "^7.1.4",
     "eslint": "^10.9.1",
+    "gh-pages": "^6.3.0",
     "globals": "^17.11.0",
     "html-webpack-plugin": "^5.6.8",
     "jest": "^30.5.2",
