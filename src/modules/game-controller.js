@@ -1,14 +1,19 @@
 import { Player } from "./player.js";
 
 const FLEET = [5, 4, 3, 3, 2];
+const SCORE_STORAGE_KEY = "battleship-scores";
 
 export class GameController {
   constructor() {
-    this.player =
-      new Player("Player", "human");
+    this.player = new Player(
+      "Player",
+      "human"
+    );
 
-    this.computer =
-      new Player("Computer", "computer");
+    this.computer = new Player(
+      "Computer",
+      "computer"
+    );
 
     this.phase = "placement";
     this.currentTurn = "player";
@@ -17,7 +22,10 @@ export class GameController {
     this.message =
       "Position your fleet, then start the game.";
 
+    this.scores = this.loadScores();
+
     this.changeHandler = null;
+    this.computerTimer = null;
 
     this.randomiseBothFleets();
   }
@@ -29,7 +37,9 @@ export class GameController {
 
   notifyChange() {
     if (this.changeHandler) {
-      this.changeHandler(this.getState());
+      this.changeHandler(
+        this.getState()
+      );
     }
   }
 
@@ -41,6 +51,7 @@ export class GameController {
       currentTurn: this.currentTurn,
       winner: this.winner,
       message: this.message,
+      scores: this.scores,
     };
   }
 
@@ -85,24 +96,23 @@ export class GameController {
             ? "horizontal"
             : "vertical";
 
-        const x =
-          Math.floor(
-            Math.random() *
-              gameboard.size
-          );
-
-        const y =
-          Math.floor(
-            Math.random() *
-              gameboard.size
-          );
-
-        placed = gameboard.placeShip(
-          length,
-          x,
-          y,
-          direction
+        const x = Math.floor(
+          Math.random() *
+            gameboard.size
         );
+
+        const y = Math.floor(
+          Math.random() *
+            gameboard.size
+        );
+
+        placed =
+          gameboard.placeShip(
+            length,
+            x,
+            y,
+            direction
+          );
 
         attempts += 1;
       }
@@ -122,6 +132,8 @@ export class GameController {
 
     this.phase = "playing";
     this.currentTurn = "player";
+    this.winner = null;
+
     this.message =
       "Your turn. Attack the enemy board.";
 
@@ -166,11 +178,13 @@ export class GameController {
     }
 
     this.currentTurn = "computer";
+
     this.notifyChange();
 
-    window.setTimeout(() => {
-      this.computerAttack();
-    }, 600);
+    this.computerTimer =
+      window.setTimeout(() => {
+        this.computerAttack();
+      }, 600);
   }
 
   computerAttack() {
@@ -195,8 +209,10 @@ export class GameController {
           this.player.gameboard.size
       );
     } while (
-      this.player.gameboard
-        .wasAttacked(x, y)
+      this.player.gameboard.wasAttacked(
+        x,
+        y
+      )
     );
 
     const result =
@@ -207,10 +223,14 @@ export class GameController {
       );
 
     const coordinate =
-      `${String.fromCharCode(65 + x)}${y + 1}`;
+      `${String.fromCharCode(
+        65 + x
+      )}${y + 1}`;
 
     this.message = result.hit
-      ? `Computer attacked ${coordinate} and hit your ship!`
+      ? result.sunk
+        ? `Computer attacked ${coordinate} and sank your ship!`
+        : `Computer attacked ${coordinate} and hit your ship!`
       : `Computer attacked ${coordinate} and missed.`;
 
     if (
@@ -230,15 +250,31 @@ export class GameController {
     this.phase = "finished";
     this.winner = winner;
 
-    this.message =
-      winner === "player"
-        ? "You won! The enemy fleet has been destroyed."
-        : "The computer won. Your fleet has been destroyed.";
+    if (winner === "player") {
+      this.scores.player += 1;
 
+      this.message =
+        "You won! The enemy fleet has been destroyed.";
+    } else {
+      this.scores.computer += 1;
+
+      this.message =
+        "The computer won. Your fleet has been destroyed.";
+    }
+
+    this.saveScores();
     this.notifyChange();
   }
 
   restartGame() {
+    if (this.computerTimer) {
+      window.clearTimeout(
+        this.computerTimer
+      );
+
+      this.computerTimer = null;
+    }
+
     this.player.resetGameboard();
     this.computer.resetGameboard();
 
@@ -251,5 +287,58 @@ export class GameController {
 
     this.randomiseBothFleets();
     this.notifyChange();
+  }
+
+  resetScores() {
+    this.scores = {
+      player: 0,
+      computer: 0,
+    };
+
+    this.saveScores();
+    this.notifyChange();
+  }
+
+  loadScores() {
+    const savedScores =
+      localStorage.getItem(
+        SCORE_STORAGE_KEY
+      );
+
+    if (!savedScores) {
+      return {
+        player: 0,
+        computer: 0,
+      };
+    }
+
+    try {
+      const parsedScores =
+        JSON.parse(savedScores);
+
+      return {
+        player:
+          Number(
+            parsedScores.player
+          ) || 0,
+
+        computer:
+          Number(
+            parsedScores.computer
+          ) || 0,
+      };
+    } catch {
+      return {
+        player: 0,
+        computer: 0,
+      };
+    }
+  }
+
+  saveScores() {
+    localStorage.setItem(
+      SCORE_STORAGE_KEY,
+      JSON.stringify(this.scores)
+    );
   }
 }

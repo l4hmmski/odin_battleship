@@ -1,12 +1,7 @@
 import "./styles.css";
 
-import {
-  GameController,
-} from "./modules/gameController.js";
-
-import {
-  initialiseDOM,
-} from "./ui/DOMController.js";
+import { GameController } from "./modules/game-controller.js";
+import { initialiseDOM } from "./ui/dom-controller.js";
 
 const game = new GameController();
 
